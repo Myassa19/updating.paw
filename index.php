@@ -3,54 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Student</title>
     <link rel="stylesheet" href="css/bootstrap.css">
+    <title>Site de recoure</title>
 </head>
-<body style="background-image:url(images/image4.jpg)">
-   <section>
-   
-    <div class="container mt-5 pt-5">
-        <div class="row">
-            <div class="col-12 col-sm-8 col-md-6 m-auto">
-                <div class="card">
-                    <div class="card-body btn-primary">
+<body style="background-image:url(image4.jpg)">
+<center><h4 >Université M'Hamed Bougara - Faculté des sciences -</h4></center>
+<center><h4 >-BOUMERDES-</h4></center>
+    <section>
+        <div class="container mt-5 pt-5">
+            <div class="row">
+                <div class="col-12 col-sm-8 col-md-6 m-auto">
+                    <div class="card">
+                        <div class="card-body btn-primary">
+                            <div class="text-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                                    <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+                                </svg>
+                            </div>
+                            <h1 class="text-center mt-3">LOG-IN</h1>
+                            <br>
+                            <form>
+                                <div class="text-center">
+                                    <div>
+                                        <input type="radio" name="status" id="ADMIN" value="Admin" checked>
+                                        <label for="ADMIN">Admin</label>
                         
-                        <h2 class="text-center">add student</h2>
-                        <div class="text-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-person-add" viewBox="0 0 16 16">
-                            <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>
-                            <path d="M8.256 14a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
-                          </svg></div>
-        <form method="post" action="Api.php">
-    <div class="form-group">
-        <label for="nom">Nom:</label>
-        <input type="text" class="form-control border-dark" name="nom" placeholder="Enter Nom" required>
-    </div>
-    <div class="form-group">
-        <label for="prenom">Prenom:</label>
-        <input type="text" class="form-control border-dark" name="prenom" placeholder="Enter Prenom" required>
-    </div>
-    <div class="form-group">
-        <label for="email">Email:</label>
-        <input type="email" class="form-control border-dark" name="email" placeholder="Enter Email" required>
-    </div>
-    <div class="form-group">
-        <label for="Groupe">Groupe:</label>
-        <input type="text" class="form-control border-dark" name="Groupe" placeholder="Enter le Groupe" required>
-    </div>
-    <button type="submit" class="btn btn-dark">Add Student</button>
-</form>
-    </div>
+                                        <input class="ml-5" type="radio" name="status" id="USER" value="User">
+                                        <label for="USER">User</label>
+                                    </div>
+                                </div>
+                                <br>
+                                <br>
+                                <div class="text-center">
+                                    <button type="button" class="btn btn-dark" onclick="validateForm()">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        function validateForm() {
+            var isAdmin = document.getElementById('ADMIN').checked;
+            var isUser = document.getElementById('USER').checked;
+
+            if (isUser) {
+                // Si l'utilisateur est sélectionné, affiche la page1
+                window.location.href = 'formulaire.php';
+            } else if (isAdmin) {
+                // Si l'admin est sélectionné, demande le mot de passe
+                var password = prompt('Enter the password:');
+
                 
-</div>
-</div>
-</div>
-</div>
-</div>
-
-
-    <script src="js/bootstrap.js" > </script>
+                if (password === 'PROF2023') //mot de pass unique donner seulement aux profs
+                {
+                    window.location.href = 'liste.php';
+                } else {
+                    alert('Mot de passe incorrect. Veuillez réessayer.');
+                }
+            }
+        }
+    </script>
+    
 </body>
 </html>
-
    
