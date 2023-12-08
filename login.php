@@ -7,6 +7,14 @@
     <title>Site de recoure</title>
 </head>
 <body style="background-image:url(images/image4.jpg)">
+<div>
+<div class="col-2 col-md-12">
+
+<center >    <img src="images/Logo_modif_francais.png" alt="logo university"style="max-width: 120px;"></center>
+            </div>
+<center ><h4 class="text-light">Université M'Hamed Bougara - Faculté des science-BOUMERDES-</h4></center>
+
+
     <section>
         <div class="container mt-5 pt-5">
             <div class="row">
@@ -32,16 +40,9 @@
                                     </div>
                                 </div>
                                 <br>
-                                <label for="Email">Email:</label>
-                                <input type="email" name="Email" class="form-control border-dark" required>
-                                
-                                <label for="MATRICULE">Matricule:</label>
-                                <br>
-                                <input type="text" name="MATRICULE" class="form-control border-dark" required>
-                                <br>
                                 <br>
                                 <div class="text-center">
-                                    <button type="button" class="btn btn-dark" onclick="validateForm()">Log in</button>
+                                    <button type="button" class="btn btn-dark" onclick="validateForm()">Submit</button>
                                 </div>
                             </form>
                         </div>
@@ -50,37 +51,31 @@
             </div>
         </div>
     </section>
-
     <script>
         function validateForm() {
-            var selectedRole = document.querySelector('input[name="status"]:checked').value;
-            var email = document.getElementsByName('Email')[0].value;
-            var matricule = document.getElementsByName('MATRICULE')[0].value;
+            var isAdmin = document.getElementById('ADMIN').checked;
+            var isUser = document.getElementById('USER').checked;
 
-            // Check if the required fields are filled based on the selected role
-            if (selectedRole === 'Admin' && email.trim() === '') {
-                alert('Please enter your email.');
-                return;
-            } else if (selectedRole === 'User' && (email.trim() === '' || matricule.trim() === '')) {
-                alert('Please enter both email and matricule.');
-                return;
-            }
+            if (isUser) {
+                // Si l'utilisateur est sélectionné, affiche la page1
+                window.location.href = 'formulaire.php';
+            } else if (isAdmin) {
+                // Si l'admin est sélectionné, demande le mot de passe
+                var password = prompt('Enter the password:');
 
-            // Continue with form submission or other actions if validation passes
-            redirectToPage(selectedRole);
-        }
-
-        function redirectToPage(role) {
-            // Customize the URLs based on your actual pages
-            if (role === 'Admin') {
-                // Admin page
-                window.location.href = 'http://localhost/projetphp/liste.php?';
-            } else if (role === 'User') {
-                // User page
-                window.location.href = 'http://localhost/projetphp/formulaire.php?';
+                
+                if (password === 'PROF2023') //mot de pass unique donner seulement aux profs
+                {
+                    window.location.href = 'liste.php';
+                } else {
+                    alert('Mot de passe incorrect. Veuillez réessayer.');
+                }
             }
         }
     </script>
+    
 </body>
 </html>
+   
+
    
