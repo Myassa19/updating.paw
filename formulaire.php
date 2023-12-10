@@ -25,7 +25,7 @@
                                 </svg>
                             </div>
                             <div class="container mt-3">
-                                <h1 class="text-center">FORMULAIRE DE RECOURS</h1>
+                                <h1 class="text-center text-dark">FORMULAIRE DE RECOURS</h1>
                                 <form method="post" action="Api.php">
                                     <div class="container mt-1 pt-1">
                                         <div class="row">
@@ -74,3 +74,4 @@
 </body>
 
 </html>
+
