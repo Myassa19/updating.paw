@@ -1,6 +1,6 @@
 <?php
 class StudentDatabase {
-    private $pdo;
+    protected $pdo;
 
     public function __construct($host, $dbname, $username, $password) {
         try {
@@ -11,20 +11,31 @@ class StudentDatabase {
         }
     }
 
+    public function getPdo() {
+        return $this->pdo;
+    }
+
     public function addStudent($nom, $prenom, $email, $groupe) {
         $stmt = $this->pdo->prepare("INSERT INTO students (nom, prenom, email, groupe) VALUES (?, ?, ?, ?)");
         $stmt->execute([$nom, $prenom, $email, $groupe]);
     }
 
-    public function searchStudent($name, $surname, $email) {
-      
-        $stmt = $this->pdo->prepare("   SELECT students.nom, students.prenom, students.email, recours.note_reel, recours.note_affiche, recours.module
-        FROM students
-        LEFT JOIN recours ON students.id = recours.id_student
-        WHERE students.nom LIKE ? OR students.prenom LIKE ? OR students.email LIKE ?
-    ");
-        $stmt->execute(["%$name%", "%$surname%", "%$email%"]);
+    public function searchStudent($searchInput) {
+        $stmt = $this->pdo->prepare("SELECT students.id, students.nom, students.prenom, students.email, recours.note_reel, recours.note_affiche, recours.module, recours.status
+            FROM students
+            LEFT JOIN recours ON students.id = recours.id_student
+            WHERE students.nom LIKE ? OR students.prenom LIKE ? OR students.email LIKE ?");
+        $stmt->execute(["%$searchInput%", "%$searchInput%", "%$searchInput%"]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function updateStatus($id, $status) {
+        try {
+            $stmt = $this->pdo->prepare("UPDATE recours SET status = ? WHERE id_student = ?");
+            $stmt->execute([$status, $id]);
+        } catch (PDOException $e) {
+            echo "Error updating status: " . $e->getMessage();
+        }
     }
 }
 
@@ -33,10 +44,17 @@ $studentDatabase = new StudentDatabase("127.0.0.1", "isil", "root", "");
 // Handle form submissions
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['searchInput'])) {
-        $searchName = $_POST['searchInput'];
-        $searchResults = $studentDatabase->searchStudent($searchName, $searchName, $searchName);
-    } else {
-        // Handle other form submissions if needed
+        $searchInput = $_POST['searchInput'];
+        $searchResults = $studentDatabase->searchStudent($searchInput);
+    } elseif (isset($_POST['saveStatus'])) {
+        try {
+            // Handle the form submission for saving status
+            foreach ($_POST['status'] as $id => $status) {
+                $studentDatabase->updateStatus($id, $status);
+            }
+        } catch (PDOException $e) {
+            echo "Error updating status: " . $e->getMessage();
+        }
     }
 }
 ?>
@@ -63,13 +81,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </ul>
         <form action="" method="post">
             <div class="input-group">
-                <div class="input-group-prepend">
-                    <select class="custom-select" id="searchCriteria" name="searchCriteria">
-                        <option value="email">Email</option>
-                        <option value="name">Nom</option>
-                        <option value="surname">Prénom</option>
-                    </select>
-                </div>
+                <select class="custom-select" id="searchCriteria" name="searchCriteria">
+                    <option value="name">Nom</option>
+                    <option value="surname">Prénom</option>
+                    <option value="email">Email</option>
+                </select>
                 <input class="form-control mr-sm-2 text-center" type="search" placeholder="Rechercher"
                        aria-label="Search" id="searchInput" name="searchInput">
                 <button class="btn btn-primary my-2 my-sm-0" type="submit">Rechercher</button>
@@ -96,50 +112,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <!-- Example result card -->
     <?php if (isset($searchResults) && !empty($searchResults)) : ?>
-        <?php foreach ($searchResults as $result) : ?>
-            <div class="card mt-3">
-                <div class="card-body">
-                    <h5 class="text-dark"><?= $result['nom'] ?> <?= $result['prenom'] ?></h5>
+        <form action="" method="post">
+            <?php foreach ($searchResults as $result) : ?>
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h5 class="text-dark"><?= $result['nom'] ?> <?= $result['prenom'] ?></h5>
 
-                            Note Réelle : <?= $result['note_reel'] ?>
-                            <br>
-                    
-                            Note Affichée : <?= $result['note_affiche'] ?>
-                            <br>
-                      
-                            Module : <?= $result['module'] ?>
-                      
-                    </p>
+                        Note Réelle : <?= $result['note_reel'] ?>
+                        <br>
 
-                    <!-- Radio buttons for favorable or unfavorable -->
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <select class="custom-select" id="searchCriteria" name="searchCriteria">
-                                <option value="Favorable">Favorable</option>
-                                <option value="Défavorable">Défavorable</option>
-                            </select>
+                        Note Affichée : <?= $result['note_affiche'] ?>
+                        <br>
+
+                        Module : <?= $result['module'] ?>
+                        <br>
+
+                        <!-- Radio buttons for favorable or unfavorable -->
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="status[<?= $result['id'] ?>]" id="favorable<?= $result['id'] ?>" value="1" <?= $result['status'] == 1 ? 'checked' : '' ?>>
+                            <label class="form-check-label" for="favorable<?= $result['id'] ?>">Favorable</label>
                         </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="status[<?= $result['id'] ?>]" id="defavorable<?= $result['id'] ?>" value="2" <?= $result['status'] == 2 ? 'checked' : '' ?>>
+                            <label class="form-check-label" for="defavorable<?= $result['id'] ?>">Défavorable</label>
+                        </div>
+                        <br>
                     </div>
-                    <br>
-                    <input type="submit"  class="btn btn-dark" value="enregistrer">
                 </div>
-            </div>
-        <?php endforeach; ?>
+                <input type="submit" class="b<tn btn-dark mt-3" value="Enregistrer" name="saveStatus">
+            <?php endforeach; ?>
+           
+        </form>
     <?php else : ?>
         <p>Aucun résultat trouvé.</p>
     <?php endif; ?>
 </div>
 
-
 <script src="js/bootstrap.bundle.min.js"></script>
 
 <script>
     function redirectToIndex() {
-        window.location.href = 'http://localhost/projetphp/index.php';
+        window.location.href = 'http://localhost/projetphp/add.php';
     }
 </script>
 </body>
-</html>
 </html>
 
 
