@@ -6,7 +6,8 @@
     <link rel="stylesheet" href="css/bootstrap.css">
     <title>Site de recoure</title>
 </head>
-<body style="background-image:url(image4.jpg)">
+<body style="background-image:url(images/image4.jpg)">
+<center >    <img src="images/Logo_modif_francais.png" alt="logo university"style="max-width: 120px;"></center>
 <center><h4 >Université M'Hamed Bougara - Faculté des sciences -</h4></center>
 <center><h4 >-BOUMERDES-</h4></center>
     <section>
@@ -52,7 +53,7 @@
 
             if (isUser) {
                 // Si l'utilisateur est sélectionné, affiche la page1
-                window.location.href = 'formulaire.php';
+                window.location.href = 'choisir.php';
             } else if (isAdmin) {
                 // Si l'admin est sélectionné, demande le mot de passe
                 var password = prompt('Enter the password:');
@@ -71,3 +72,4 @@
 </body>
 </html>
    
+
